@@ -1,0 +1,64 @@
+{% extends "layout.njk" %}
+
+{% block main %}
+
+<h1>Créer une nouvelle activité</h1>
+
+<form method="POST">
+
+  <p>Les champs obligatoires sont suivis par <strong><abbr title="obligatoire">*</abbr></strong>.</p>
+
+<h1>Evénement</h1>
+
+  <p>
+    <label for="Titre de l'activité">
+      <span>Titre de l'activité : </span>
+      <input type="text" id="nom" name="username" placeholder="activité" required />
+      <strong><abbr title="obligatoire">*</abbr></strong>
+    </label>
+  </p>
+  <p>
+    <label for="Description">
+      <span>Description : </span>
+      <input type="textarea" id="Description" name="Description" placeholder="Description..." />
+    </label>
+  </p>
+  <p>
+    <label for="Date de début">
+      <span>Date de début : </span>
+      <input type="date" id="startdate" name="nomdutilisateur" placeholder="" />
+    </label>
+  </p>
+
+  <h2>Participants</h2>
+
+  <p>
+  <label for="Ajouter un participant">
+    <span>Ajouter un participant : </span>
+      <input type="email" id="username" placeholder="Email" />
+      <input type="button" id="addParticipant" value="Ajouter" placeholder="Ajouter" />
+    </br></br>
+    <select id="liste" multiple>
+    </select>
+  </br></br>
+    <input type="button" value="Reset" id="deleteAll" name="button">
+  </p>
+
+
+
+  <button type="submit">
+  <h3>Créer l'activité</h3>
+  </button>
+</form>
+<script>
+  document.getElementById("addParticipant").addEventListener("click", ()=> {
+    const myValue = document.getElementById("username").value;
+    document.getElementById("liste").innerHTML += "<option value=\"" + myValue + "\">" + myValue + "</option>";
+    console.log(liste);
+  });
+  document.getElementById("deleteAll").addEventListener("click", ()=> {
+    document.getElementById("liste").innerHTML = "";
+  });
+</script>
+
+{% endblock %}
