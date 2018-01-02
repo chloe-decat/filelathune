@@ -1,0 +1,25 @@
+{
+  "name": "filelathune",
+  "version": "0.0.1",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "jest --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chloe-decat/filelathune.git"
+  },
+  "author": "CAFM",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/chloe-decat/filelathune/issues"
+  },
+  "homepage": "https://github.com/chloe-decat/filelathune#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "jest": "^22.0.4",
+    "nunjucks": "^3.0.1",
+    "pg": "^7.4.0"
+  }
+}
