@@ -93,4 +93,7 @@ app.get("/logout", function(request, result) {
 const port = process.env.PORT || 3000;
 app.listen(port, function() {
   console.log(`Server listening on port ${port}`);
+
+app.get("/create_activity", function(request, result) {
+    result.render("create_activity");
 });
