@@ -13,7 +13,7 @@ function findUser(email, password){//remplacer par la requête dans la base de d
     if (email === myUser.email && password === myUser.password){
       resolve(myUser);
     } else {
-      reject("could not log");
+      reject("Erreur login ou mot de passe");
     }
   });
 }
@@ -23,7 +23,7 @@ function findUserByEmail(email){
     if (email === myUser.email){
       resolve(myUser);
     } else {
-      reject("could not log");
+      reject("Erreur login ou mot de passe");
     }
   });
 }
