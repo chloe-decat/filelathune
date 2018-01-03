@@ -1,7 +1,28 @@
 {% extends "layout.njk" %}
 
 {% block header %}
+<h1>Bienvenue sur FileLaThune</h1>
+<p>Les bons comptes font les bons amis</p>
+<hr />
+<h2>Vous avez déjà un compte ?</h2>
+<form action="/" method="POST">
   <div>
-    C'est le contenu par défaut
+    <label>E-mail</label>
+    <input type="text" name="username"/><br/>
   </div>
+  <div>
+    <label>Mot de passe</label>
+    <input type="password" name="password"/>
+  </div>
+  <div>
+    <button type="submit">
+      Connecter
+    </button>
+  </div>
+</form>
+<hr />
+<h2>Nouveau sur le site ?</h2>
+<p>
+  Créer le module de création de compte ici
+</p>
 {% endblock %}
