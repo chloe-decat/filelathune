@@ -1,31 +1,37 @@
 {% extends "layout.njk" %}
 
 {% block main %}
-
 <h1>Bienvenue sur FileLaThune</h1>
 <p>Les bons comptes font les bons amis</p>
 <hr />
 <h2>Vous avez déjà un compte ?</h2>
 <form action="/" method="POST">
+  <table>
+    <tr>
+      <td>
+        <label>E-mail</label>
+      </td>
+      <td>
+        <input type="text" name="username"/><br/>
+      </td>
+    </tr>
+    <tr>
+      <td>
+        <label>Mot de passe</label>
+      </td>
+      <td>
+        <input type="password" name="password"/>
+      </td>
+    </tr>
+  </table>
   <div>
-    <label>E-mail</label>
-    <input type="text" name="username"/><br/>
-  </div>
-  <div>
-    <label>Mot de passe</label>
-    <input type="password" name="password"/>
-  </div>
-  <div>
-    <button type="submit">
+    <button type="submit" class="btn btn-primary">
       Connecter
     </button>
   </div>
 </form>
 <hr />
 <h2>Nouveau sur le site ?</h2>
-<p>
-  Créer le module de création de compte ici
-</p>
 <div id="fb-root"></div>
 
 <a href="/account" class="btn btn-success btn-lg">Créer un compte</a>

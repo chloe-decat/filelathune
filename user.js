@@ -1,71 +1,54 @@
 const PG = require("pg");
 
-const myUser = {
-  email: "fabien.lebas@decathlon.com",
-  password: "1234",
-  displayName: "Fabien",
-  id:"12345"
-};
-
 function findUser(email, password){//remplacer par la requête dans la base de données
   const client = new PG.Client();
   client.connect();
-  client.query(
+  return client.query(
   "SELECT * FROM users WHERE email = $1::text AND password = $2::text",
-  [email, password],
-  function(error, result) {
-    if (error) {
-      console.warn(error);
-    } else {
-      console.log("user found " + result.rows[0]);
-      return(result.rows[0]);
-    }
-    client.end();
-  }
-  );
-  //
-  // return new Promise((resolve, reject) => {
-  //   if (email === myUser.email && password === myUser.password){
-  //     resolve(myUser);
-  //   } else {
-  //     reject("Erreur login ou mot de passe");
-  //   }
-  // });
+  [email, password])
+    .then(result => {
+      client.end();
+      return result.rows[0];
+    })
+    .catch(error => {
+      client.end();
+      console.log(error);
+    } )
+  ;
 }
 
 function findUserByEmail(email){
   const client = new PG.Client();
   client.connect();
-  client.query(
+  return client.query(
   "SELECT * FROM users WHERE email = $1::text",
-  [email],
-  function(error, result) {
-    if (error) {
-      console.warn(error);
-    } else {
-      console.log("user found " + email);
-      return(result.rows[0]);
-    }
-    client.end();
-  }
-  );
-  // return new Promise((resolve, reject) => {
-  //   if (email === myUser.email){
-  //     resolve(myUser);
-  //   } else {
-  //     reject("Erreur login ou mot de passe");
-  //   }
-  // });
+  [email])
+    .then(result => {
+      client.end();
+      return result.rows[0];
+    })
+    .catch(error => {
+      console.log(error);
+      client.end();
+    } )
+  ;
 }
 
 function findUserById(id){
-  return new Promise((resolve, reject) => {
-    if (id === myUser.id){
-      resolve(myUser);
-    } else {
-      reject("Erreur login ou mot de passe");
-    }
-  });
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+  "SELECT * FROM users WHERE id = $1",
+  [id])
+    .then(result => {
+      client.end();
+      return result.rows[0];
+    })
+    .catch(error => {
+      console.log(error);
+      client.end();
+    })
+  ;
 }
 
 module.exports = {
