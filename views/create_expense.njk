@@ -12,20 +12,27 @@
   <p>
     <label for="Titre de la dépense">
       <span>Titre de la dépense : </span>
-      <input type="text" id="nom" name="username" placeholder="titre court" required />
+      <input type="text" id="nom" name="name" placeholder="titre court" required />
       <strong><abbr title="obligatoire">*</abbr></strong>
     </label>
   </p>
   <p>
     <label for="Description">
       <span>Description : </span>
-      <input type="textarea" id="Description" name="Description" placeholder="Description..." />
+      <input type="textarea" id="Description" name="description" placeholder="Description..." />
     </label>
   </p>
   <p>
+    <span>Type de dépense : </span>
+    <select name="typeOfExpense" id="TypeOfExpense" placeholder="Type">
+      <option value="expense">Dépense</option>
+      <option value="refund">Remboursment</option>
+  </select>
+</p>
+  <p>
     <label for="Montant">
       <span>Montant</span>
-      <input type="text" id="montant" name="montant" placeholder="Montant en Euros" required />
+      <input type="text" id="montant" name="amount" placeholder="Montant en Euros" required />
       <strong><abbr title="obligatoire">*</abbr></strong>
     </label>
   </p>
