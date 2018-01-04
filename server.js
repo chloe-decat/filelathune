@@ -6,6 +6,7 @@ const sha256 = require("sha256");
 
 const queries = require("./queries.js");
 const users = require("./user.js");
+const uuidv4 = require('uuid/v4');
 const FacebookStrategy = require("passport-facebook").Strategy;
 const FB = require("fb");
 
@@ -174,3 +175,35 @@ app.listen(port, function() {
 app.get("/create_activity", function(request, result) {
     result.render("create_activity");
 });
+
+app.get("/create_expense", function(request, result) {
+  const idActivity='0e1a513c-891b-4d02-9082-f723e41177f1'
+  queries.getCurrentActivityName(idActivity,result)
+  .then(response => result.render("create_expense",{currentActivity:response}))
+  .catch(error => console.warn(error))
+});
+
+app.post(
+  "/save_expense",
+  function(request, result) {
+    const idActivity = '0e1a513c-891b-4d02-9082-f723e41177f1'
+    queries.insertIntoExpenses(request.body.name, request.body.description, request.body.amount, uuidv4(), idActivity)
+    .then ( listUsersExpense => {
+      return queries.insertIntoUsersExpenses(listUsersExpense.rows[0].id)
+    })
+    .then(
+      final => {
+        result.redirect("/save_expense");
+      }
+    )
+    .catch(error => console.warn(error))
+  }
+);
+
+app.get(
+  "/save_expense",
+  function(request, result) {
+    // request.body contains an object with our named fields
+    result.render("save_expense");
+  }
+);

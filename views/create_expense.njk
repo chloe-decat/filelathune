@@ -1,0 +1,70 @@
+{% extends "layout.njk" %}
+
+{% block main %}
+
+<h1>Créer une nouvelle dépense sur l'activité :</h1>
+<h2>{{currentActivity}}</h2>
+<form method="POST" action="save_expense">
+
+  <p>Les champs obligatoires sont suivis par <strong><abbr title="obligatoire">*</abbr></strong>.</p>
+
+<h1>Dépense</h1>
+  <p>
+    <label for="Titre de la dépense">
+      <span>Titre de la dépense : </span>
+      <input type="text" id="nom" name="name" placeholder="titre court" required />
+      <strong><abbr title="obligatoire">*</abbr></strong>
+    </label>
+  </p>
+  <p>
+    <label for="Description">
+      <span>Description : </span>
+      <input type="textarea" id="Description" name="description" placeholder="Description..." />
+    </label>
+  </p>
+  <p>
+    <span>Type de dépense : </span>
+    <select name="typeOfExpense" id="TypeOfExpense" placeholder="Type">
+      <option value="expense">Dépense</option>
+      <option value="refund">Remboursment</option>
+  </select>
+</p>
+  <p>
+    <label for="Montant">
+      <span>Montant</span>
+      <input type="text" id="montant" name="amount" placeholder="Montant en Euros" required />
+      <strong><abbr title="obligatoire">*</abbr></strong>
+    </label>
+  </p>
+
+  <h2>Contributeurs</h2>
+
+  <p>
+  <label for="Ajouter un contributeur">
+    <span>Ajouter un contributeur : </span>
+      <input type="email" id="username" placeholder="Email" />
+      <input type="button" id="addContributeur" value="Ajouter" placeholder="Ajouter" />
+    </br></br>
+    <select id="liste" multiple>
+    </select>
+  </br></br>
+    <input type="button" value="Reset" id="deleteAll" name="button">
+  </p>
+
+
+  <button type="submit">
+  <h3>Créer la dépense</h3>
+  </button>
+</form>
+<script>
+  document.getElementById("addContributeur").addEventListener("click", ()=> {
+    const myValue = document.getElementById("username").value;
+    document.getElementById("liste").innerHTML += "<option value=\"" + myValue + "\">" + myValue + "</option>";
+    console.log(liste);
+  });
+  document.getElementById("deleteAll").addEventListener("click", ()=> {
+    document.getElementById("liste").innerHTML = "";
+  });
+</script>
+
+{% endblock %}
