@@ -3,7 +3,8 @@ const PG = require("pg");
 const myUser = {
   email: "fabien.lebas@decathlon.com",
   password: "1234",
-  displayName: "Fabien"
+  displayName: "Fabien",
+  id:"12345"
 };
 
 function findUser(email, password){//remplacer par la requête dans la base de données
@@ -57,7 +58,18 @@ function findUserByEmail(email){
   // });
 }
 
+function findUserById(id){
+  return new Promise((resolve, reject) => {
+    if (id === myUser.id){
+      resolve(myUser);
+    } else {
+      reject("Erreur login ou mot de passe");
+    }
+  });
+}
+
 module.exports = {
   findUser: findUser,
-  findUserByEmail: findUserByEmail
+  findUserByEmail: findUserByEmail,
+  findUserById: findUserById
 };
