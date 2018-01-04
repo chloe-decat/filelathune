@@ -1,7 +1,48 @@
 {% extends "layout.njk" %}
 
-{% block content %}
-  <div>
-    Here is the content of the page
-  </div>
+{% block main %}
+<style>
+  input {
+    margin:10px;
+    width: 300px;
+  }
+</style>
+  <h2 class="display-5">
+    Créer un compte
+  </h2>
+  <hr class="my-4">
+  <form action="/account" method="POST">
+    <table>
+      <tr>
+        <td>
+          <label>Nom</label>
+        </td>
+        <td>
+          <input type="text" name="name"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label>E-mail</label>
+        </td>
+        <td>
+          <input type="text" name="username"/>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label>Mot de passe</label>
+        </td>
+        <td>
+          <input type="password" name="password"/>
+        </td>
+      </tr>
+    </table>
+    <hr class="my-4">
+    <div>
+      <button type="submit" class="btn btn-success btn-lg">
+        Créer mon compte
+      </button>
+    </div>
+  </form>
 {% endblock %}
