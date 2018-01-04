@@ -25,7 +25,10 @@ function getCurrentActivityName(idActivity){
     `SELECT name FROM activities WHERE id=$1`,
     [`${idActivity}`]
   )
-  .then(result => result.rows[0].name)
+  .then(result => {
+    client.end();
+    return result.rows[0].name;
+  })
 }
 
 function insertIntoExpenses(name,description,amount,uuid, idActivity){
@@ -35,6 +38,10 @@ function insertIntoExpenses(name,description,amount,uuid, idActivity){
     " INSERT INTO expenses(id, name, description,creation_time,modification_time, activity_id) values ($1,$2,$3,$4,$5,$6) returning id",
     [uuid,name,description,'now()','now()',idActivity]
   )
+  .then(result => {
+    client.end();
+    return result;
+  })
 }
 
 function insertIntoUsersExpenses(uuid){
@@ -44,10 +51,10 @@ function insertIntoUsersExpenses(uuid){
     " INSERT INTO users_expenses(user_id, expense_id) values ($1,$2)",
     ['081a68ec-8556-44ef-8509-65fea0717b0b',uuid]
   )
-    .then(result => {
-      client.end();
-      return result.rows[0];
-    })
+  .then(result => {
+    client.end();
+    return result;
+  })
 }
 
 function insertUser(name, email, password){
