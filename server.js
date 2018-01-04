@@ -6,6 +6,8 @@ const sha256 = require("sha256");
 
 const queries = require("./queries.js");
 const users = require("./user.js");
+const FacebookStrategy = require("passport-facebook").Strategy;
+const FB = require("fb");
 
 const app = express();
 
@@ -25,17 +27,19 @@ app.use(
     saveUninitialized: false
   })
 );
+
+
 // Initialize Passport and restore authentication state,
 // if any, from the session.
 app.use(passport.initialize());
 app.use(passport.session());
 
 passport.serializeUser(function(user, callback) {
-  return callback(null, user.email);
+  return callback(null, user.id);
 });
 
-passport.deserializeUser(function(email, callback) {
-  return users.findUserByEmail(email).then(user => {
+passport.deserializeUser(function(id, callback) {
+  return users.findUserById(id).then(user => {
     callback(null, user)
   });
 });
@@ -50,8 +54,65 @@ passport.use(
       .catch(error => {
         callback(error);
       });
+  }));
+
+  new FacebookStrategy(
+    {
+      clientID: process.env.CLIENT_ID,
+      clientSecret: process.env.CLIENT_SECRET,
+      callbackURL: process.env.REDIRECT_URI
+    },
+    function(accessToken, refreshToken, profile, callback) {
+      FB.api(
+          "me",
+          { fields: "id,name,email", access_token: accessToken },
+          function(user) {
+            findOrCreateUser(user)
+              .then(user => {
+                callback(null, user);
+              })
+              .catch(error => {
+                callback(error);
+              })
+          }
+        );
+    }
+  );
+
+
+// Attention checker les routes qui font doublon
+app.get("/", function(request, result) {
+  result.render("login", {
+    user: request.user
+  });
+});
+
+app.get(
+  "/login",
+  passport.authenticate("facebook", {
+    authType: "rerequest" // rerequest is here to ask again if login was denied once
   })
 );
+
+app.get(
+  "/login/facebook/return",
+  passport.authenticate("facebook", { failureRedirect: "/login" }),
+  function(request, result) {
+    result.redirect("/");
+  }
+);
+
+app.get(
+  "/profile",
+  require("connect-ensure-login").ensureLoggedIn(),
+  function(request, result) {
+    result.render("profile", {
+      id: request.user.id,
+      name: request.user.displayName,
+      emails: request.user.emails
+    });
+});
+// Attention checker les routes qui font doublon - jusque la.
 
 app.get("/", function(request, result) {
   result.render("login");
