@@ -9,6 +9,7 @@ const users = require("./user.js");
 const uuidv4 = require('uuid/v4');
 const FacebookStrategy = require("passport-facebook").Strategy;
 const FB = require("fb");
+const queries = require("./create_activity.js");
 
 const app = express();
 
@@ -175,6 +176,7 @@ app.listen(port, function() {
 app.get("/create_activity", function(request, result) {
     result.render("create_activity");
 });
+<<<<<<< HEAD
 
 app.get("/create_expense", function(request, result) {
   const idActivity='0e1a513c-891b-4d02-9082-f723e41177f1'
@@ -205,5 +207,11 @@ app.get(
   function(request, result) {
     // request.body contains an object with our named fields
     result.render("save_expense");
+
+app.post(
+  "/create_activity",
+  function(request, result) {
+    console.log(request.body);
+    queries.exportActivity(uuidv4(),request.body.startdate, request.body.description, request.body.titre);
   }
 );
