@@ -18,6 +18,29 @@ function insertUser(name, email, password){
   );
 }
 
+function getCurrentActivityName(idActivity){
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    `SELECT name FROM activities WHERE id=$1`,
+    [`${idActivity}`]
+  )
+  .then(result => result.rows[0].name)
+}
+
+function postExpense(newExpense,uuid){
+  const client = new PG.Client();
+  client.connect();
+  console.log (newExpense);
+  return client.query(
+    text:`INSERT INTO activities(id, start_date, end_date, description, creation_user_id,creation_time, modification_user_id, modification_time)`,
+    values:[`0e1a513c-891b-4d02-9082-f723e41177f1', '2017-01-01', '2017-06-01', 'Epiphanie + bière, galette assurée', '081a68ec-8556-44ef-8509-65fea0717b0b', now(), '081a68ec-8556-44ef-8509-65fea0717b0b',now())`]
+  )
+  .then(result => result.rows[0].name)
+}
+
 module.exports = {
-  insertUser: insertUser
-};
+getCurrentActivityName:getCurrentActivityName,
+guid:guid,
+insertUser: insertUser
+}
