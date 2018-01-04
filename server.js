@@ -162,7 +162,7 @@ app.post(
   "/account",
   function(request, result) {
     queries.insertUser(request.body.name, request.body.username, sha256(request.body.password));
-    result.redirect("/register");
+    result.redirect("/");
   }
 );
 
