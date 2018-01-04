@@ -2,6 +2,9 @@ const express = require("express");
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const nunjucks = require("nunjucks");
+const sha256 = require("sha256");
+
+const queries = require("./queries.js");
 const users = require("./user.js");
 
 const app = express();
@@ -40,7 +43,7 @@ passport.deserializeUser(function(email, callback) {
 passport.use(
   new LocalStrategy(function(email, password, callback) {
     users
-      .findUser(email, password)
+      .findUser(email, sha256(password))
       .then(user => {
         callback(null, user);
       })
@@ -60,7 +63,7 @@ app.get("/register", function(request, result) {
 
 app.post(
   "/register",
-//ajouter du code ici pour créer le user
+//ajouter du code ici pour connecter le user
 );
 
 app.post(
@@ -89,6 +92,18 @@ app.get("/logout", function(request, result) {
   request.logout();
   result.redirect("/");
 });
+
+app.get("/account", function(request, result) {
+  result.render("account");
+});
+
+app.post(
+  "/account",
+  function(request, result) {
+    queries.insertUser(request.body.name, request.body.username, sha256(request.body.password));
+    result.redirect("/register");
+  }
+);
 
 const port = process.env.PORT || 3000;
 app.listen(port, function() {

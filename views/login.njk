@@ -1,28 +1,36 @@
 {% extends "layout.njk" %}
 
 {% block main %}
-<h1>Bienvenue sur FileLaThune</h1>
-<p>Les bons comptes font les bons amis</p>
-<hr />
-<h2>Vous avez déjà un compte ?</h2>
-<form action="/" method="POST">
-  <div>
-    <label>E-mail</label>
-    <input type="text" name="username"/><br/>
-  </div>
-  <div>
-    <label>Mot de passe</label>
-    <input type="password" name="password"/>
-  </div>
-  <div>
-    <button type="submit">
-      Connecter
-    </button>
-  </div>
-</form>
-<hr />
-<h2>Nouveau sur le site ?</h2>
-<p>
-  Créer le module de création de compte ici
-</p>
+<style>
+  .row{
+    margin: 10px;
+  }
+  input{
+    width: 70%;
+  }
+</style>
+  <h1 class="display-4">Bienvenue sur FileLaThune</h1>
+  <p class="lead">Les bons comptes font les bons amis</p>
+  <hr class="my-4">
+  <h2 class="display-5">Vous avez déjà un compte ?</h2>
+  <form action="/" method="POST">
+    <div class="row">
+      <div class="col-4">
+        <label>E-mail</label>
+        <input type="text" name="username"/>
+      </div>
+      <div class="col-4">
+        <label>Mot de passe</label>
+        <input type="password" name="password"/>
+      </div>
+    </div>
+    <div>
+      <button type="submit" class="btn btn-primary btn-lg">
+        Connecter
+      </button>
+    </div>
+  </form>
+  <hr class="my-4">
+  <h2>Nouveau sur le site ?</h2>
+  <a href="/account" class="btn btn-success btn-lg">Créer un compte</a>
 {% endblock %}
