@@ -115,17 +115,42 @@ function insertUser(name, email, password){
   })
 }
 
-
-function getCurrentActivityName(idActivity){
+function getActivity(idActivity){
   const client = new PG.Client();
   client.connect();
   return client.query(
-    `SELECT name FROM activities WHERE id=$1`,
+    `SELECT * FROM activities WHERE id=$1`,
     [`${idActivity}`]
   )
   .then(result => {
     client.end();
-    return result.rows[0].name;
+    return result;
+  })
+}
+
+function getExpense(idActivity){
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    `SELECT * FROM expenses WHERE activity_id=$1`,
+    [`${idActivity}`]
+  )
+  .then(result => {
+    client.end();
+    return result;
+  })
+}
+
+function getParticipant(idActivity){
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    `SELECT * FROM users WHERE id IN (SELECT user_id FROM users_activities WHERE activity_id=$1)`,
+    [`${idActivity}`]
+  )
+  .then(result => {
+    client.end();
+    return result;
   })
 }
 
