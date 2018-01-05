@@ -138,13 +138,26 @@ app.post(
 );
 
 app.get(
+  "/dashboard",
+  require("connect-ensure-login").ensureLoggedIn("/"),
+  function(request, result) {
+    console.log("User : ", request.user)
+    result.render("dashboard", {
+      id: request.user.id,
+      name: request.user.name,
+      email: request.user.email
+    });
+  }
+);
+
+app.get(
   "/profile",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
     console.log("toto", request.user)
     result.render("profile", {
       id: request.user.id,
-      name: request.user.displayName,
+      name: request.user.name,
       email: request.user.email
     });
   }
