@@ -206,7 +206,7 @@ app.post(
       return queries.insertIntoUsersActivities(activity.rows[0].id, request.user.id)
       })
     .then(final => {
-        result.redirect("/create_activity");
+        result.redirect("/activity_dashboard");
       })
     .catch(error => console.warn(error))
   }
@@ -245,4 +245,9 @@ app.get(
   "/save_expense",
   function(request, result) {
     result.render("save_expense");
+});
+app.get(
+  "/activity_dashboard",
+  function(request, result) {
+    result.render("activity_dashboard");
 });
