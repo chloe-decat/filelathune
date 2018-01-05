@@ -157,7 +157,6 @@ app.get(
   "/profile",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-    console.log("toto", request.user)
     result.render("profile", {
       id: request.user.id,
       name: request.user.name,
@@ -197,10 +196,7 @@ app.post(
   "/create_activity",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-    queries.insertActivity(uuidv4(),request.body.startdate, request.body.description, request.body.titre, request.user.id)
-    .then(activity => {
-      return queries.insertIntoUsersActivities(activity.rows[0].id, request.user.id)
-      })
+    return queries.exportActivity(uuidv4(),request.body.startdate, request.body.description, request.body.titre, request.body.hidden_value, request.user.id)
     .then(final => {
         result.redirect("/create_activity");
       })
@@ -213,21 +209,24 @@ app.get("/create_expense",
   function(request, result) {
   const idActivity='0e1a513c-891b-4d02-9082-f723e41177f1';
   queries.getCurrentActivityName(idActivity,result)
-    .then(response => result.render("create_expense",{currentActivity:response}))
+    .then(response => result.render("create_expense",
+    {
+      currentActivity:response,
+      name:request.user.name,
+      id:request.user.id
+    }))
     .catch(error => console.warn(error))
 });
 
 app.post(
-  "/save_expense",
+  "/create_expense",
+  require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
     const idActivity = '0e1a513c-891b-4d02-9082-f723e41177f1';
-    queries.insertIntoExpenses(request.body.name, request.body.description, request.body.amount, uuidv4(), idActivity)
-    .then ( listUsersExpense => {
-      return queries.insertIntoUsersExpenses(listUsersExpense.rows[0].id)
-    })
+    return queries.insertIntoExpenses(request.body.titre, request.body.description, request.body.amount, uuidv4(), idActivity,request.body.hidden_value,request.user.id)
     .then(
       final => {
-        result.redirect("/save_expense");
+        result.redirect("/create_expense");
       }
     )
     .catch(error => console.warn(error))

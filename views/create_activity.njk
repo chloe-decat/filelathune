@@ -61,10 +61,11 @@
       </br></br>
         <input type="button" class="btn btn-warning" value="Reset" id="deleteAll" name="button">
       </p>
+      <div id="hidden"></div>
       </div>
       <div class="col-xs-12 col-sm-12 col-md-12 text-center">
       </br>
-        <button type="submit" class="btn btn-success"> <h3>Créer l'activité</h3> </button>
+        <button type="submit" id="submit" class="btn btn-success"> <h3>Créer l'activité</h3> </button>
       </div>
     </div>
   </div>
@@ -73,11 +74,17 @@
 </form>
 
 <script>
+ let myList="";
   document.getElementById("addParticipant").addEventListener("click", ()=> {
     const myValue = document.getElementById("username").value;
     document.getElementById("liste").innerHTML += "<option value=\"" + myValue + "\">" + myValue + "</option>";
-    console.log(liste);
+    myList += "," + myValue;
   });
+
+  document.getElementById("submit").addEventListener("click", ()=> {
+    document.getElementById("hidden").innerHTML = "<input type=\"hidden\" name=\"hidden_value\" value=\"" + myList + "\">";
+  });
+
   document.getElementById("deleteAll").addEventListener("click", ()=> {
     document.getElementById("liste").innerHTML = "";
   });

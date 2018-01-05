@@ -1,67 +1,99 @@
 {% extends "layout.njk" %}
 
 {% block main %}
+<font color="white">
+  <p>Bonjour {{name}}, tu as l'id : {{id}}</p>
+</font>
+<form method="POST">
 
-<h1>Créer une nouvelle dépense sur l'activité :</h1>
-<h2>{{currentActivity}}</h2>
-<form method="POST" action="save_expense">
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+        <font color="white">
+        <h1>Créer une nouvelle dépense pour l'activité : </h1>
+        <h2>{{currentActivity}}</h2>
+      </br></br></br><I>Les champs obligatoires sont suivis par <strong><abbr title="obligatoire">*</abbr></strong>.</I>
+        </p>
+      </font>
+      </div>
+    </div>
+    <div class="row card-deck">
+      <div class="col-xs-12 col-sm-6 col-md-4 text-center card bg-light mb-3">
+        <h2> Dépense </h2>
+      </br>
+        <p>
+          <label for="Titre de la dépense">
+            <span>Titre de la dépense : </span>
+            <input type="text" id="nom" name="titre" placeholder="dépense" required />
+            <strong><abbr title="obligatoire">*</abbr></strong>
+          </label>
+        </p>
+        <p>
+          <label for="Description">
+            <span>Description : </span>
+            <input type="textarea" id="description" name="description" placeholder="Description..." />
+          </label>
+        </p>
+        <p>
+          <label for="Type de dépense">
+            <span>Type de dépense : </span>
+            <select name="typeOfExpense" id="TypeOfExpense" placeholder="Type">
+              <option value="expense">Dépense</option>
+              <option value="refund">Remboursment</option>
+            </select>
+          </label>
+      </p>
+        <p>
+          <label for="Montant">
+            <span>Montant</span>
+            <input type="text" id="montant" name="amount" placeholder="Montant en Euros" required />
+            <strong><abbr title="obligatoire">*</abbr></strong>
+          </label>
+        </p>
+      </div>
+      <div class="col-md-offset-1 col-xs-12 col-sm-6 col-md-4 text-center card bg-light mb-3">
+        <h2> Ajouter des participants </h2>
+        <p>
+        </br>
+        <label for="Ajouter un participant">
+            </br>
+            <input type="email" id="username" placeholder="Email" required/>
+            <input type="button" class="btn btn-primary" id="addParticipant" value="Ajouter" placeholder="Ajouter" />
+            <strong><abbr title="obligatoire">*</abbr></strong>
+      </div>
+      <div class="col-xs-12 col-sm-6 col-md-4 text-center card bg-light mb-3">
+        <h2> Liste des participants </h2>
+      </br>
+        <select id="liste" multiple>
+        </select>
+      </br></br>
+        <input type="button" class="btn btn-warning" value="Reset" id="deleteAll" name="button">
+      </p>
+      <div id="hidden"></div>
+      </div>
+      <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+      </br>
+        <button type="submit" id="submit" class="btn btn-success"> <h3>Créer la dépense</h3> </button>
+      </div>
+    </div>
+  </div>
+</body>
 
-  <p>Les champs obligatoires sont suivis par <strong><abbr title="obligatoire">*</abbr></strong>.</p>
-
-<h1>Dépense</h1>
-  <p>
-    <label for="Titre de la dépense">
-      <span>Titre de la dépense : </span>
-      <input type="text" id="nom" name="name" placeholder="titre court" required />
-      <strong><abbr title="obligatoire">*</abbr></strong>
-    </label>
-  </p>
-  <p>
-    <label for="Description">
-      <span>Description : </span>
-      <input type="textarea" id="Description" name="description" placeholder="Description..." />
-    </label>
-  </p>
-  <p>
-    <span>Type de dépense : </span>
-    <select name="typeOfExpense" id="TypeOfExpense" placeholder="Type">
-      <option value="expense">Dépense</option>
-      <option value="refund">Remboursment</option>
-  </select>
-</p>
-  <p>
-    <label for="Montant">
-      <span>Montant</span>
-      <input type="text" id="montant" name="amount" placeholder="Montant en Euros" required />
-      <strong><abbr title="obligatoire">*</abbr></strong>
-    </label>
-  </p>
-
-  <h2>Contributeurs</h2>
-
-  <p>
-  <label for="Ajouter un contributeur">
-    <span>Ajouter un contributeur : </span>
-      <input type="email" id="username" placeholder="Email" />
-      <input type="button" id="addContributeur" value="Ajouter" placeholder="Ajouter" />
-    </br></br>
-    <select id="liste" multiple>
-    </select>
-  </br></br>
-    <input type="button" value="Reset" id="deleteAll" name="button">
-  </p>
-
-
-  <button type="submit">
-  <h3>Créer la dépense</h3>
-  </button>
 </form>
+
 <script>
-  document.getElementById("addContributeur").addEventListener("click", ()=> {
+ let myList="";
+  document.getElementById("addParticipant").addEventListener("click", ()=> {
     const myValue = document.getElementById("username").value;
     document.getElementById("liste").innerHTML += "<option value=\"" + myValue + "\">" + myValue + "</option>";
-    console.log(liste);
+    myList += "," + myValue;
   });
+
+  document.getElementById("submit").addEventListener("click", ()=> {
+    document.getElementById("hidden").innerHTML = "<input type=\"hidden\" name=\"hidden_value\" value=\"" + myList + "\">";
+  });
+
   document.getElementById("deleteAll").addEventListener("click", ()=> {
     document.getElementById("liste").innerHTML = "";
   });
