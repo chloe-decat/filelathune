@@ -1,7 +1,10 @@
 {% extends "layout.njk" %}
 
-{% block content %}
-  <div>
-    Here is the content of the page
-  </div>
+{% block main %}
+<font color="white">
+  <p>Bonjour {{name}}, tu as l'id : {{id}}</p>
+</font>
+<a href="/logout"><button>Déconnecter</button></a>
+
+<a href="/create_activity"><button>Créer activité</button></a>
 {% endblock %}

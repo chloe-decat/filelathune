@@ -29,6 +29,10 @@ app.use(
   })
 );
 
+const port = process.env.PORT || 3000;
+app.listen(port, function() {
+  console.log(`Server listening on port ${port}`);
+});
 
 // Initialize Passport and restore authentication state,
 // if any, from the session.
@@ -109,8 +113,8 @@ app.get(
   function(request, result) {
     result.render("profile", {
       id: request.user.id,
-      name: request.user.displayName,
-      emails: request.user.emails
+      name: request.user.name,
+      email: request.user.email
     });
 });
 // Attention checker les routes qui font doublon - jusque la.
@@ -132,8 +136,20 @@ app.post(
   "/",
   passport.authenticate("local", { failureRedirect: "/" }),
   function(request, result) {
-    console.log("redirect to /profile");
-    result.redirect("/profile");
+    console.log("redirect to /dashboard");
+    result.redirect("/dashboard");
+  }
+);
+
+app.get(
+  "/dashboard",
+  require("connect-ensure-login").ensureLoggedIn("/"),
+  function(request, result) {
+    result.render("dashboard", {
+      id: request.user.id,
+      name: request.user.name,
+      email: request.user.email
+    });
   }
 );
 
@@ -144,7 +160,7 @@ app.get(
     console.log("toto", request.user)
     result.render("profile", {
       id: request.user.id,
-      name: request.user.displayName,
+      name: request.user.name,
       email: request.user.email
     });
   }
@@ -167,20 +183,23 @@ app.post(
   }
 );
 
-const port = process.env.PORT || 3000;
-app.listen(port, function() {
-  console.log(`Server listening on port ${port}`);
-});
+app.get("/create_activity",
+  require("connect-ensure-login").ensureLoggedIn("/"),
+  function(request, result){
+    result.render("create_activity",{
+      name:request.user.name,
+      id:request.user.id
+    });
+  }
+);
 
-app.get("/create_activity", function(request, result) {
-    result.render("create_activity");
-});
 app.post(
   "/create_activity",
+  require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-    queries.exportActivity(uuidv4(),request.body.startdate, request.body.description, request.body.titre)
+    queries.insertActivity(uuidv4(),request.body.startdate, request.body.description, request.body.titre, request.user.id)
     .then(activity => {
-      return queries.insertIntoUsersActivities(activity.rows[0].id)
+      return queries.insertIntoUsersActivities(activity.rows[0].id, request.user.id)
       })
     .then(final => {
         result.redirect("/create_activity");
@@ -189,11 +208,13 @@ app.post(
   }
 );
 
-app.get("/create_expense", function(request, result) {
-  const idActivity='0e1a513c-891b-4d02-9082-f723e41177f1'
+app.get("/create_expense",
+  require("connect-ensure-login").ensureLoggedIn("/"),
+  function(request, result) {
+  const idActivity='0e1a513c-891b-4d02-9082-f723e41177f1';
   queries.getCurrentActivityName(idActivity,result)
-  .then(response => result.render("create_expense",{currentActivity:response}))
-  .catch(error => console.warn(error))
+    .then(response => result.render("create_expense",{currentActivity:response}))
+    .catch(error => console.warn(error))
 });
 
 app.post(
