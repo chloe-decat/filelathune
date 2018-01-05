@@ -43,36 +43,12 @@
       </div>
     </form>
   </div>
-</div>
-<div class="container-fluid">
-  <div class="row card-deck col-xs-12 col-sm-6 col-md-4 card bg-light mb-3">
-    <h2>Nouveau sur le site ?</h2>
-    <div id="fb-root"></div>
-      <a href="/account" class="btn btn-success btn-lg">Créer un compte</a>
-    <div class="btn fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false">
-      Se connecter avec Facebook
-    </div>
-  </div>
-</div>
-<script>
-  window.fbAsyncInit = function() {
-    FB.init({
-      appId      : '140184933335614',
-      cookie     : true,
-      xfbml      : true,
-      version    : '^0.3.2'
-    });
 
-    FB.AppEvents.logPageView();
+<hr />
+<h2>Nouveau sur le site ?</h2>
 
-  };
+<div id="fb-root"></div>
+<a href="/auth/facebook">click pour facebook</a>
 
-  (function(d, s, id){
-     var js, fjs = d.getElementsByTagName(s)[0];
-     if (d.getElementById(id)) {return;}
-     js = d.createElement(s); js.id = id;
-     js.src = "https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.11&appId=140184933335614";
-     fjs.parentNode.insertBefore(js, fjs);
-   }(document, 'script', 'facebook-jssdk'));
-</script>
+
 {% endblock %}

@@ -184,6 +184,24 @@ function exportActivity(uuid, startdate, description, titre, listUser, user) {
     })
   })
 }
+
+
+
+function findOrCreateUser(name,email){
+  console.log("je suis dans find0rcreate")
+ const client = new PG.Client();
+ client.connect();
+ return client.query(
+ "INSERT INTO users (id, name, email) VALUES (uuid_generate_v4(), $1::text, $2::text)",
+ [name, email])
+   .then(result => {
+     return  console.log("insert OK");;
+   })
+   .catch(error => console.log(error))
+ ;
+ client.end();
+}
+
 module.exports = {
 getExpenseParticipant:getExpenseParticipant,
 getBuyer:getBuyer,
@@ -195,5 +213,6 @@ userExist:userExist,
 insertUser:insertUser,
 getCurrentActivityName:getCurrentActivityName,
 insertIntoExpenses:insertIntoExpenses,
-exportActivity:exportActivity
+exportActivity:exportActivity,
+findOrCreateUser: findOrCreateUser
 };

@@ -61,6 +61,7 @@ passport.use(
       });
   }));
 
+passport.use(
   new FacebookStrategy(
     {
       clientID: process.env.CLIENT_ID,
@@ -68,10 +69,12 @@ passport.use(
       callbackURL: process.env.REDIRECT_URI
     },
     function(accessToken, refreshToken, profile, callback) {
+      console.log("je suis dans facebook strategy")
       FB.api(
           "me",
           { fields: "id,name,email", access_token: accessToken },
           function(user) {
+            console.log("je suis dans facebook strategy/user")
             findOrCreateUser(user)
               .then(user => {
                 callback(null, user);
@@ -82,8 +85,8 @@ passport.use(
           }
         );
     }
-  );
-
+  )
+);
 
 // Attention checker les routes qui font doublon
 app.get("/", function(request, result) {
@@ -93,16 +96,17 @@ app.get("/", function(request, result) {
 });
 
 app.get(
-  "/login",
+  "/auth/facebook",
   passport.authenticate("facebook", {
     authType: "rerequest" // rerequest is here to ask again if login was denied once
   })
 );
 
 app.get(
-  "/login/facebook/return",
+  "/auth/facebook/return",
   passport.authenticate("facebook", { failureRedirect: "/login" }),
   function(request, result) {
+      console.log("je suis dans passport.authenticate /login/facebook/return")
     result.redirect("/");
   }
 );
@@ -111,6 +115,7 @@ app.get(
   "/profile",
   require("connect-ensure-login").ensureLoggedIn(),
   function(request, result) {
+    console.log("je suis dans passport.authenticate /profile")
     result.render("profile", {
       id: request.user.id,
       name: request.user.name,
