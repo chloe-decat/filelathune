@@ -145,11 +145,16 @@ app.get(
   "/dashboard",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-    result.render("dashboard", {
-      id: request.user.id,
-      name: request.user.name,
-      email: request.user.email
-    });
+    queries.getActivitiesFromUSer(request.user.id)
+      .then(activities => {
+        result.render("dashboard", {
+          id: request.user.id,
+          name: request.user.name,
+          email: request.user.email,
+          activities: activities.rows
+        })
+      })
+      ;
   }
 );
 

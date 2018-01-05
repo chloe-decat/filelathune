@@ -101,6 +101,19 @@ function insertActivity(uuid, startdate, description, titre, user_id) {
     })
   })
 
+function getActivitiesFromUSer(user_id){
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    "SELECT * FROM activities WHERE id IN (SELECT activity_id FROM users_activities WHERE user_id = $1) ORDER BY start_date DESC",
+    [user_id]
+  )
+  .then(result => {
+    client.end();
+    return result;
+  })
+  .catch(error => console.warn(error))
+  ;
 }
 
   function userExist(userEmail){
@@ -128,5 +141,6 @@ getCurrentActivityName:getCurrentActivityName,
 insertUser: insertUser,
 insertIntoExpenses:insertIntoExpenses,
 insertActivity:insertActivity,
-insertIntoUsersActivities:insertIntoUsersActivities
+insertIntoUsersActivities:insertIntoUsersActivities,
+getActivitiesFromUSer:getActivitiesFromUSer
 }

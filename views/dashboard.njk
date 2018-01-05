@@ -5,6 +5,37 @@
   <p>Bonjour {{name}}, tu as l'id : {{id}}</p>
 </font>
 <a href="/logout"><button>Déconnecter</button></a>
-
-<a href="/create_activity"><button>Créer activité</button></a>
+<div class="container-fluid">
+  <div class="row card-deck col-xs-12 col-sm-6 col-md-4 card bg-light mb-3">
+    <h2>Mes activités</h2>
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <a href="/dashboard/b">
+          <th scope="col">Titre</th>
+          <th scope="col">Description</th>
+          <th scope="col">Début</th>
+          </a>
+        </tr>
+      </thead>
+      <tbody>
+        {% for activity in activities %}
+          <tr id="{{activity.id}}">
+              <td>{{activity.name}}</td>
+              <td>{{activity.description}}</td>
+              <td>{{activity.start_date.toLocaleString("fr", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}}</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+<a href="/create_activity"><button class="btn btn-success">Créer activité</button></a>
+<script>
+  {% for activity in activities %}
+  document.getElementById("{{activity.id}}").addEventListener("click", () => {
+    window.location = "/activity_dashboard/{{activity.id}}";
+  });
+  {% endfor %}
+</script>
 {% endblock %}

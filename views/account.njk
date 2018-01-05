@@ -6,43 +6,46 @@
     margin:10px;
     width: 300px;
   }
+  .btn{
+    margin:10px;
+  }
 </style>
-  <h2 class="display-5">
-    Créer un compte
-  </h2>
-  <hr class="my-4">
-  <form action="/account" method="POST">
-    <table>
-      <tr>
-        <td>
-          <label>Nom</label>
-        </td>
-        <td>
-          <input type="text" name="name"/>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <label>E-mail</label>
-        </td>
-        <td>
-          <input type="text" name="username"/>
-        </td>
-      </tr>
-      <tr>
-        <td>
-          <label>Mot de passe</label>
-        </td>
-        <td>
-          <input type="password" name="password"/>
-        </td>
-      </tr>
-    </table>
-    <hr class="my-4">
-    <div>
-      <button type="submit" class="btn btn-success btn-lg">
-        Créer mon compte
-      </button>
-    </div>
-  </form>
+<div class="container-fluid">
+  <div class="row card-deck col-xs-12 col-sm-6 col-md-4 card bg-light mb-3">
+    <h2 class="display-5">Créer un compte</h2>
+    <form action="/account" method="POST">
+      <table>
+        <tr>
+          <td>
+            <label>Nom</label>
+          </td>
+          <td>
+            <input type="text" name="name"/>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label>E-mail</label>
+          </td>
+          <td>
+            <input type="text" name="username"/>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label>Mot de passe</label>
+          </td>
+          <td>
+            <input type="password" name="password"/>
+          </td>
+        </tr>
+      </table>
+      <div>
+        <button type="submit" class="btn btn-success btn-lg">
+          Créer mon compte
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
 {% endblock %}
