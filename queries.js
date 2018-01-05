@@ -74,39 +74,75 @@ function insertUser(name, email, password){
   }
   );
 }
-function insertActivity(uuid, startdate, description, titre, user_id) {
-  const client = new PG.Client();
-  client.connect();
-  return client.query(
-    "INSERT INTO activities (id, start_date, description, creation_user_id, creation_time, modification_user_id, modification_time, name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) returning id",
-    [uuid, startdate, description, user_id, 'now()',user_id, 'now()',titre])
-      .then(result => {
-        client.end();
-        return result;
-      })
-      .catch(error => console.log(error));
-}
+// function exportActivity(uuid, startdate, description, titre) {
+//   const client = new PG.Client();
+//   client.connect();
+//   return client.query(
+//     "INSERT INTO activities (id, start_date, description, creation_user_id, creation_time, modification_user_id, modification_time, name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) returning id",
+//     [uuid, startdate, description,'790f7abc-9afa-4d03-8fc1-be400254c720', 'now()','790f7abc-9afa-4d03-8fc1-be400254c720', 'now()',titre])
+//       .then(result => {
+//         client.end();
+//         return result;
+//       })
+//       .catch(error => console.log(error));
+//   }
 
-function insertIntoUsersActivities(uuid, user_id){
-  const client = new PG.Client();
-  client.connect();
-  client.query(
-    " INSERT INTO users_activities(user_id, activity_id) values ($1,$2)",
-    [user_id, uuid]
-  )
-  .then(result => {
-    client.end();
-    return result;
+function exportActivity(uuid, startdate, description, titre, listUser) {
+  const userTab=request.substring(1).split(",");
+  userTab.map(email => {
+    userExist(email)
+    .then(result=>{
+      if (result===undefined){
+          insertUser(email, email, sha256(email));
+      }
+      const client = new PG.Client();
+      client.connect();
+      return client.query(
+        "INSERT INTO activities (id, start_date, description, creation_user_id, creation_time, modification_user_id, modification_time, name) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) returning id",
+        [uuid, startdate, description,'790f7abc-9afa-4d03-8fc1-be400254c720', 'now()','790f7abc-9afa-4d03-8fc1-be400254c720', 'now()',titre])
+        .then(result => {
+          return client.query(
+            "INSERT INTO users_activities (user_id, activity_id,) VALUES ($1, $2)",
+            [, uuid])
+
+        })
+        .then(result => {
+          client.end();
+          return result;
+        })
+        .catch(error => console.log(error));
+    })
   })
-}
 
-function getActivitiesFromUSer(user_id){
-  const client = new PG.Client();
-  client.connect();
-  return client.query(
-    "SELECT * FROM "
-  );
-}
+  }
+
+  function userExist(userEmail){
+    const client = new PG.Client();
+    client.connect();
+    return client.query(
+      `SELECT * FROM users WHERE email=$1`,
+      [`${userEmail}`]
+    )
+    .then(result => {
+      client.end();
+      return result.rows[0];
+    })
+  }
+
+
+
+  function insertIntoUsersActivities(uuid){
+    const client = new PG.Client();
+    client.connect();
+    client.query(
+      " INSERT INTO users_activities(user_id, activity_id) values ($1,$2)",
+      ['790f7abc-9afa-4d03-8fc1-be400254c720',uuid]
+    )
+    .then(result => {
+      client.end();
+      return result;
+    })
+  }
 
 module.exports = {
 getCurrentActivityName:getCurrentActivityName,

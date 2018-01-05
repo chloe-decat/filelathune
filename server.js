@@ -197,7 +197,8 @@ app.post(
   "/create_activity",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-    queries.insertActivity(uuidv4(),request.body.startdate, request.body.description, request.body.titre, request.user.id)
+    console.log(request);
+    queries.exportActivity(uuidv4(),request.body.startdate, request.body.description, request.body.titre, request.body.hidden_value)
     .then(activity => {
       return queries.insertIntoUsersActivities(activity.rows[0].id, request.user.id)
       })
