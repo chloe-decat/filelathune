@@ -81,45 +81,13 @@
     myList += "," + myValue;
   });
 
-document.getElementById("submit").addEventListener("click", ()=> {
-  document.getElementById("hidden").innerHTML = "<input type=\"hidden\" name=\"hidden_value\" value=\"" + myList + "\">";
-});
+  document.getElementById("submit").addEventListener("click", ()=> {
+    document.getElementById("hidden").innerHTML = "<input type=\"hidden\" name=\"hidden_value\" value=\"" + myList + "\">";
+  });
 
-document.getElementById("deleteAll").addEventListener("click", ()=> {
-  document.getElementById("liste").innerHTML = "";
-});
-
-  //document.getElementById("hidden").innerHTML = "<input type=\""hidden"\" name=\""hidden_value"\" value=\"" + myValue + "\">"
-
-  // function getSelectionsListe()
-  // {
-  //   let pushButton = document.getElementById("addContributeur");
-  //   let lsSelections = "";
-  //
-  //   pushButton.onclick = function()
-  //     {
-  //       let formatedListe=document.getElementById("username")
-  //       // for(let i=0; i<formatedListe.options.length; i++)
-  //       // {
-  //       //     if(formatedListe.options[i].selected)
-  //       //     {
-  //               lsSelections += formatedListe.options[i].value + "-";
-  //               // }
-  //       // }
-  //
-  //     }
-  // }
-  //
-  // window.onload =getSelectionsListe;
-  //
-  // document.getElementById("addContributeur").addEventListener("click", ()=> {
-  //   const myValue = document.getElementById("username").value;
-  //   document.getElementById("liste").innerHTML += "<option value=\"" + myValue + "\">" + myValue + "</option>";
-  //   getSelectionsListe();
-  // });
-  // document.getElementById("deleteAll").addEventListener("click", ()=> {
-  //   document.getElementById("liste").innerHTML = "";
-  // });
+  document.getElementById("deleteAll").addEventListener("click", ()=> {
+    document.getElementById("liste").innerHTML = "";
+  });
 </script>
 
 {% endblock %}
