@@ -216,13 +216,8 @@ app.get("/create_expense",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
   const idActivity='0e1a513c-891b-4d02-9082-f723e41177f1';
-  queries.getCurrentActivityName(idActivity,result)
-    .then(response => result.render("create_expense",
-    {
-      currentActivity:response,
-      name:request.user.name,
-      id:request.user.id
-    }))
+  queries.getActivity(idActivity,result)
+    .then(response => result.rows[0].name("create_expense",{currentActivity:response}))
     .catch(error => console.warn(error))
 });
 
@@ -246,8 +241,32 @@ app.get(
   function(request, result) {
     result.render("save_expense");
 });
-app.get(
-  "/activity_dashboard",
+
+app.get("/activity_dashboard",
+  require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-    result.render("activity_dashboard");
+    console.log(request.user.id)
+    result.render("activity_dashboard",{
+      name:request.user.name,
+      id:request.user.id
+    });
+  }
+);
+app.get(
+  "/activity_dashboard/:id",
+  require("connect-ensure-login").ensureLoggedIn("/"),
+  function(request, result) {
+  const currentActivity = queries.getActivity(`${request.params.id}`);
+  const currentExpense = queries.getExpense(`${request.params.id}`);
+  const currentParticipant = queries.getParticipant(`${request.params.id}`);
+Promise.all([currentActivity, currentExpense, currentParticipant])
+  .then(results => {
+    result.render("activity_dashboard",{
+      activity:results[0].rows,
+      expense:results[1].rows,
+      participants:results[2].rows,
+      name:request.user.name,
+      id:request.user.id
+    })
+  })
 });
