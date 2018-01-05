@@ -175,6 +175,19 @@ app.listen(port, function() {
 app.get("/create_activity", function(request, result) {
     result.render("create_activity");
 });
+app.post(
+  "/create_activity",
+  function(request, result) {
+    queries.exportActivity(uuidv4(),request.body.startdate, request.body.description, request.body.titre)
+    .then(activity => {
+      return queries.insertIntoUsersActivities(activity.rows[0].id)
+      })
+    .then(final => {
+        result.redirect("/create_activity");
+      })
+    .catch(error => console.warn(error))
+  }
+);
 
 app.get("/create_expense", function(request, result) {
   const idActivity='0e1a513c-891b-4d02-9082-f723e41177f1'
@@ -186,7 +199,7 @@ app.get("/create_expense", function(request, result) {
 app.post(
   "/save_expense",
   function(request, result) {
-    const idActivity = '0e1a513c-891b-4d02-9082-f723e41177f1'
+    const idActivity = '0e1a513c-891b-4d02-9082-f723e41177f1';
     queries.insertIntoExpenses(request.body.name, request.body.description, request.body.amount, uuidv4(), idActivity)
     .then ( listUsersExpense => {
       return queries.insertIntoUsersExpenses(listUsersExpense.rows[0].id)
@@ -203,7 +216,4 @@ app.post(
 app.get(
   "/save_expense",
   function(request, result) {
-    // request.body contains an object with our named fields
     result.render("save_expense");
-  }
-);
