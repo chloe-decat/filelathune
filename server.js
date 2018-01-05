@@ -192,7 +192,7 @@ app.post(
   function(request, result) {
     return queries.exportActivity(uuidv4(),request.body.startdate, request.body.description, request.body.titre, request.body.hidden_value, request.user.id)
     .then(final => {
-        result.redirect("/create_activity");
+        result.redirect("/activity_dashboard");
       })
     .catch(error => console.warn(error))
   }
@@ -258,4 +258,9 @@ Promise.all([currentActivity, currentExpense, currentParticipant, currentBuyer, 
       id:request.user.id
     })
   })
+});
+app.get(
+  "/activity_dashboard",
+  function(request, result) {
+    result.render("activity_dashboard");
 });
