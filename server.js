@@ -213,8 +213,7 @@ app.post(
   }
 );
 
-// app.get(
-//   "/save_expense",
-//   function(request, result) {
-//     // request.body contains an object with our named fields
-//     result.render("save_expense");
+app.get(
+  "/save_expense",
+  function(request, result) {
+    result.render("save_expense");
