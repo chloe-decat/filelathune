@@ -3,7 +3,6 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const nunjucks = require("nunjucks");
 const sha256 = require("sha256");
-
 const queries = require("./queries.js");
 const users = require("./user.js");
 const uuidv4 = require('uuid/v4');
@@ -43,10 +42,8 @@ passport.serializeUser(function(user, callback) {
   return callback(null, user.id);
 });
 
-passport.deserializeUser(function(id, callback) {
-  return users.findUserById(id).then(user => {
-    callback(null, user)
-  });
+passport.deserializeUser(function(user, callback) {
+  return callback(null, user)
 });
 
 passport.use(
@@ -69,21 +66,7 @@ passport.use(
       callbackURL: process.env.REDIRECT_URI
     },
     function(accessToken, refreshToken, profile, callback) {
-      console.log("je suis dans facebook strategy")
-      FB.api(
-          "me",
-          { fields: "id,name,email", access_token: accessToken },
-          function(user) {
-            console.log("je suis dans facebook strategy/user")
-            findOrCreateUser(user)
-              .then(user => {
-                callback(null, user);
-              })
-              .catch(error => {
-                callback(error);
-              })
-          }
-        );
+      return queries.findOrCreateUser(profile, callback)
     }
   )
 );
@@ -106,8 +89,8 @@ app.get(
   "/auth/facebook/return",
   passport.authenticate("facebook", { failureRedirect: "/login" }),
   function(request, result) {
-      console.log("je suis dans passport.authenticate /login/facebook/return")
-    result.redirect("/");
+    console.log("je suis dans passport.authenticate /login/facebook/return")
+    result.redirect("/profile");
   }
 );
 
@@ -115,14 +98,12 @@ app.get(
   "/profile",
   require("connect-ensure-login").ensureLoggedIn(),
   function(request, result) {
-    console.log("je suis dans passport.authenticate /profile")
     result.render("profile", {
       id: request.user.id,
       name: request.user.name,
       email: request.user.email
     });
 });
-// Attention checker les routes qui font doublon - jusque la.
 
 app.get("/", function(request, result) {
   result.render("login");
