@@ -132,8 +132,8 @@ app.post(
   "/",
   passport.authenticate("local", { failureRedirect: "/" }),
   function(request, result) {
-    console.log("redirect to /profile");
-    result.redirect("/profile");
+    console.log("redirect to /dashboard");
+    result.redirect("/dashboard");
   }
 );
 
