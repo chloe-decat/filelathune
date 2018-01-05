@@ -1,44 +1,54 @@
 {% extends "layout.njk" %}
 
 {% block main %}
-<h1>Bienvenue sur FileLaThune</h1>
-<p>Les bons comptes font les bons amis</p>
-<hr />
-<h2>Vous avez déjà un compte ?</h2>
-<form action="/" method="POST">
-  <table>
-    <tr>
-      <td>
-        <label>E-mail</label>
-      </td>
-      <td>
-        <input type="text" name="username"/><br/>
-      </td>
-    </tr>
-    <tr>
-      <td>
-        <label>Mot de passe</label>
-      </td>
-      <td>
-        <input type="password" name="password"/>
-      </td>
-    </tr>
-  </table>
-  <div>
-    <button type="submit" class="btn btn-primary">
-      Connecter
-    </button>
+<style>
+  .btn{
+    margin:10px;
+  }
+</style>
+<font color="white">
+  <h1>Bienvenue sur FileLaThune</h1>
+  <p>Les bons comptes font les bons amis</p>
+</font>
+<div class="container-fluid">
+  <div class="row card-deck col-xs-12 col-sm-6 col-md-4 card bg-light mb-3">
+    <h2>Vous avez déjà un compte ?</h2>
+    <form action="/" method="POST">
+      <table>
+        <tr>
+          <td>
+            <label>E-mail</label>
+          </td>
+          <td>
+            <input type="text" name="username"/><br/>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <label>Mot de passe</label>
+          </td>
+          <td>
+            <input type="password" name="password"/>
+          </td>
+        </tr>
+      </table>
+      <div>
+        <button type="submit" class="btn btn-primary">
+          Connecter
+        </button>
+      </div>
+    </form>
   </div>
-</form>
-<hr />
-<h2>Nouveau sur le site ?</h2>
-<div id="fb-root"></div>
-
-<a href="/account" class="btn btn-success btn-lg">Créer un compte</a>
-<div class="col-3">
 </div>
-<div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false">
-  Créez votre compte avec Facebook
+<div class="container-fluid">
+  <div class="row card-deck col-xs-12 col-sm-6 col-md-4 card bg-light mb-3">
+    <h2>Nouveau sur le site ?</h2>
+    <div id="fb-root"></div>
+      <a href="/account" class="btn btn-success btn-lg">Créer un compte</a>
+    <div class="btn fb-login-button" data-max-rows="1" data-size="large" data-button-type="login_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false">
+      Se connecter avec Facebook
+    </div>
+  </div>
 </div>
 <script>
   window.fbAsyncInit = function() {
