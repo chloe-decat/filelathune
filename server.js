@@ -56,6 +56,7 @@ passport.use(
       });
   }));
 
+passport.use(
   new FacebookStrategy(
     {
       clientID: process.env.CLIENT_ID,
@@ -63,10 +64,12 @@ passport.use(
       callbackURL: process.env.REDIRECT_URI
     },
     function(accessToken, refreshToken, profile, callback) {
+      console.log("je suis dans facebook strategy")
       FB.api(
           "me",
           { fields: "id,name,email", access_token: accessToken },
           function(user) {
+            console.log("je suis dans facebook strategy/user")
             findOrCreateUser(user)
               .then(user => {
                 callback(null, user);
@@ -77,8 +80,8 @@ passport.use(
           }
         );
     }
-  );
-
+  )
+);
 
 // Attention checker les routes qui font doublon
 app.get("/", function(request, result) {
@@ -88,16 +91,17 @@ app.get("/", function(request, result) {
 });
 
 app.get(
-  "/login",
+  "/auth/facebook",
   passport.authenticate("facebook", {
     authType: "rerequest" // rerequest is here to ask again if login was denied once
   })
 );
 
 app.get(
-  "/login/facebook/return",
+  "/auth/facebook/return",
   passport.authenticate("facebook", { failureRedirect: "/login" }),
   function(request, result) {
+      console.log("je suis dans passport.authenticate /login/facebook/return")
     result.redirect("/");
   }
 );
@@ -106,66 +110,67 @@ app.get(
   "/profile",
   require("connect-ensure-login").ensureLoggedIn(),
   function(request, result) {
+    console.log("je suis dans passport.authenticate /profile")
     result.render("profile", {
       id: request.user.id,
       name: request.user.displayName,
       emails: request.user.emails
     });
 });
-// Attention checker les routes qui font doublon - jusque la.
 
-app.get("/", function(request, result) {
-  result.render("login");
-});
-
-app.get("/register", function(request, result) {
-  result.render("register");
-});
-
-app.post(
-  "/register",
-//ajouter du code ici pour connecter le user
-);
-
-app.post(
-  "/",
-  passport.authenticate("local", { failureRedirect: "/" }),
-  function(request, result) {
-    console.log("redirect to /profile");
-    result.redirect("/profile");
-  }
-);
-
-app.get(
-  "/profile",
-  require("connect-ensure-login").ensureLoggedIn("/"),
-  function(request, result) {
-    console.log("toto", request.user)
-    result.render("profile", {
-      id: request.user.id,
-      name: request.user.displayName,
-      email: request.user.email
-    });
-  }
-);
-
-app.get("/logout", function(request, result) {
-  request.logout();
-  result.redirect("/");
-});
-
-app.get("/account", function(request, result) {
-  result.render("account");
-});
-
-app.post(
-  "/account",
-  function(request, result) {
-    queries.insertUser(request.body.name, request.body.username, sha256(request.body.password));
-    result.redirect("/register");
-  }
-);
-
+// app.get("/", function(request, result) {
+//   result.render("login");
+// });
+//
+// app.get("/register", function(request, result) {
+//   result.render("register");
+// });
+//
+// app.post(
+//   "/register",
+// //ajouter du code ici pour connecter le user
+// );
+//
+// app.post(
+//   "/",
+//   passport.authenticate("local", { failureRedirect: "/" }),
+//   function(request, result) {
+//     console.log("redirect to /profile");
+//     result.redirect("/profile");
+//   }
+// );
+//
+// app.get(
+//   "/profile",
+//   require("connect-ensure-login").ensureLoggedIn("/"),
+//   function(request, result) {
+//     console.log("toto", request.user)
+//     result.render("profile", {
+//       id: request.user.id,
+//       name: request.user.displayName,
+//       email: request.user.email
+//     });
+//   }
+// );
+//
+// app.get("/logout", function(request, result) {
+//   request.logout();
+//   result.redirect("/");
+// });
+//
+// app.get("/account", function(request, result) {
+//   result.render("account");
+// });
+//
+// app.post(
+//   "/account",
+//   function(request, result) {
+//     queries.insertUser(request.body.name, request.body.username, sha256(request.body.password));
+//     result.redirect("/register");
+//   }
+// );
+//
+//
 const port = process.env.PORT || 3000;
 app.listen(port, function() {
   console.log(`Server listening on port ${port}`);
