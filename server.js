@@ -199,7 +199,7 @@ app.get("/create_expense", function(request, result) {
 app.post(
   "/save_expense",
   function(request, result) {
-    const idActivity = '0e1a513c-891b-4d02-9082-f723e41177f1'
+    const idActivity = '0e1a513c-891b-4d02-9082-f723e41177f1';
     queries.insertIntoExpenses(request.body.name, request.body.description, request.body.amount, uuidv4(), idActivity)
     .then ( listUsersExpense => {
       return queries.insertIntoUsersExpenses(listUsersExpense.rows[0].id)
