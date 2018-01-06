@@ -15,6 +15,9 @@ nunjucks.configure("views", {
   autoescape: true,
   express: app
 });
+
+app.use(express.static("./images"));
+
 app.set("views", __dirname + "/views");
 app.set("view engine", "njk");
 
