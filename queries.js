@@ -99,7 +99,8 @@ function insertActivity(uuid, startdate, description, titre, user_id) {
       })
       .catch(error => console.log(error));
     })
-  })
+  });
+}
 
 function getActivitiesFromUSer(user_id){
   const client = new PG.Client();
@@ -116,23 +117,23 @@ function getActivitiesFromUSer(user_id){
   ;
 }
 
-  function userExist(userEmail){
-    const client = new PG.Client();
-    client.connect();
-    return client.query(
-      `SELECT * FROM users WHERE email=$1`,
-      [`${userEmail}`]
-    )
-    .then(result => {
-      if (result.rows[0]=== undefined) {
-          client.end();
-         return result=true;
-      } else {
+function userExist(userEmail){
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    `SELECT * FROM users WHERE email=$1`,
+    [`${userEmail}`]
+  )
+  .then(result => {
+    if (result.rows[0]=== undefined) {
         client.end();
-        return result.rows[0].id;
-      }
-    })
-  }
+       return result=true;
+    } else {
+      client.end();
+      return result.rows[0].id;
+    }
+  })
+}
 
 
 
@@ -141,6 +142,6 @@ getCurrentActivityName:getCurrentActivityName,
 insertUser: insertUser,
 insertIntoExpenses:insertIntoExpenses,
 insertActivity:insertActivity,
-insertIntoUsersActivities:insertIntoUsersActivities,
-getActivitiesFromUSer:getActivitiesFromUSer
-}
+getActivitiesFromUSer:getActivitiesFromUSer,
+userExist:userExist
+};
