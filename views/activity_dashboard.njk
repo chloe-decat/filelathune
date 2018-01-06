@@ -2,7 +2,99 @@
 {% extends "layout.njk" %}
 
 {% block main %}
-  <div>
-    Ici vient le boulot de Micka
+<font color="white">
+  <p>Bonjour {{name}}, tu as l'id : {{id}}</p>
+</font>
+<h1>
+  <div class="text-center">
+  <font color="white">
+
+{% for activityInfo in activity %}
+<div>
+  {{activityInfo.name}}</a>
+</div>
+{% endfor %}
+
+</font>
+</h1>
+</br>
+<h2>
+  <div class="text-center">
+  <font color="white">
+Informations</font>
+</h2>
+
+
+
+<div class="table-responsive">
+<table class="table table-striped table-secondary">
+  <font color="black">
+  <thead>
+    <tr>
+      <th scope="col">Participants</th>
+      <th scope="col">Etat des dépenses</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for activityParticipant in participants %}
+    <tr>
+      <th scope="row">{{activityParticipant.email}}</th>
+      <td>-29€</td>
+    </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+</div>
+</br>
+
+<h2>
+  <div class="text-center">
+  <font color="white">
+Liste des dépenses</font>
+</h2>
+<div class="table-responsive">
+  <table class="table table-striped table-secondary">
+    <font color="black">
+    <thead>
+      <tr>
+        <th scope="col">Titre</th>
+        <th scope="col">Date</th>
+        <th scope="col">Payeur</th>
+        <th scope="col">Pour qui?</th>
+        <th scope="col">Montant</th>
+        <th scope="col">Pièce jointe</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for expenseInfo in expense %}
+      <div>
+        <tr>
+          <th scope="row">{{expenseInfo.name}}</th>
+          <td>{{expenseInfo.creation_time.toLocaleString("fr", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}}</td>
+          <td>
+            {% for buyerInfo in buyer %}
+              <div>
+                {{buyerInfo.email}}</a>
+              </div>
+              {% endfor %}
+          </td>
+          <td>
+            {% for expenseParticipantInfo in expenseParticipant %}
+              <div>
+                {{expenseParticipantInfo.email}}</a>
+              </div>
+              {% endfor %}
+          </td>
+          <td>{{expenseInfo.amount}}</td>
+          <td><button type="button" class="btn btn-link" href={{expenseInfo.description}}>Voir</button></td>
+        </tr>
+      </div>
+      {% endfor %}
+
+    </tbody>
+  </table>
   </div>
+
 {% endblock %}
