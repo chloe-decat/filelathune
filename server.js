@@ -145,11 +145,16 @@ app.get(
   "/dashboard",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-    result.render("dashboard", {
-      id: request.user.id,
-      name: request.user.name,
-      email: request.user.email
-    });
+    queries.getActivitiesFromUSer(request.user.id)
+      .then(activities => {
+        result.render("dashboard", {
+          id: request.user.id,
+          name: request.user.name,
+          email: request.user.email,
+          activities: activities.rows
+        })
+      })
+      ;
   }
 );
 
@@ -196,7 +201,10 @@ app.post(
   "/create_activity",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-    return queries.exportActivity(uuidv4(),request.body.startdate, request.body.description, request.body.titre, request.body.hidden_value, request.user.id)
+    queries.insertActivity(uuidv4(),request.body.startdate, request.body.description, request.body.titre, request.user.id)
+    .then(activity => {
+      return queries.insertIntoUsersActivities(activity.rows[0].id, request.user.id)
+      })
     .then(final => {
         result.redirect("/create_activity");
       })

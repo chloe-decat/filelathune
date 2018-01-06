@@ -58,9 +58,24 @@ function insertIntoExpenses(name, description, amount, uuid, idActivity, listUse
     })
 }
 
-function exportActivity(uuid, startdate, description, titre, listUser, user) {
-  const userTab=listUser.substring(1).split(",");
-  let userActivity="";
+function insertUser(name, email, password){
+  const client = new PG.Client();
+  client.connect();
+  client.query(
+  "INSERT INTO users (id, name, email, password) VALUES (uuid_generate_v4(), $1::text, $2::text, $3::text)",
+  [name, email, password],
+  function(error, result) {
+    if (error) {
+      console.warn(error);
+    } else {
+      console.log("insert OK");
+      return(result);
+    }
+    client.end();
+  }
+  );
+}
+function insertActivity(uuid, startdate, description, titre, user_id) {
   const client = new PG.Client();
   client.connect();
   return client.query(
@@ -84,27 +99,41 @@ function exportActivity(uuid, startdate, description, titre, listUser, user) {
       })
       .catch(error => console.log(error));
     })
-  })
-
+  });
 }
 
-  function userExist(userEmail){
-    const client = new PG.Client();
-    client.connect();
-    return client.query(
-      `SELECT * FROM users WHERE email=$1`,
-      [`${userEmail}`]
-    )
-    .then(result => {
-      if (result.rows[0]=== undefined) {
-          client.end();
-         return result=true;
-      } else {
+function getActivitiesFromUSer(user_id){
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    "SELECT * FROM activities WHERE id IN (SELECT activity_id FROM users_activities WHERE user_id = $1) ORDER BY start_date DESC",
+    [user_id]
+  )
+  .then(result => {
+    client.end();
+    return result;
+  })
+  .catch(error => console.warn(error))
+  ;
+}
+
+function userExist(userEmail){
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    `SELECT * FROM users WHERE email=$1`,
+    [`${userEmail}`]
+  )
+  .then(result => {
+    if (result.rows[0]=== undefined) {
         client.end();
-        return result.rows[0].id;
-      }
-    })
-  }
+       return result=true;
+    } else {
+      client.end();
+      return result.rows[0].id;
+    }
+  })
+}
 
 
 
@@ -112,5 +141,7 @@ module.exports = {
 getCurrentActivityName:getCurrentActivityName,
 insertUser: insertUser,
 insertIntoExpenses:insertIntoExpenses,
-exportActivity:exportActivity
-}
+insertActivity:insertActivity,
+getActivitiesFromUSer:getActivitiesFromUSer,
+userExist:userExist
+};
