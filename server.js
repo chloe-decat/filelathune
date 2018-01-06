@@ -201,12 +201,9 @@ app.post(
   "/create_activity",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-    queries.insertActivity(uuidv4(),request.body.startdate, request.body.description, request.body.titre, request.user.id)
-    .then(activity => {
-      return queries.insertIntoUsersActivities(activity.rows[0].id, request.user.id)
-      })
+    return queries.exportActivity(uuidv4(),request.body.startdate, request.body.description, request.body.titre, request.body.hidden_value, request.user.id)
     .then(final => {
-        result.redirect("/activity_dashboard");
+        result.redirect("/create_activity");
       })
     .catch(error => console.warn(error))
   }
@@ -215,9 +212,14 @@ app.post(
 app.get("/create_expense",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-  const idActivity='0e1a513c-891b-4d02-9082-f723e41177f1';
-  queries.getActivity(idActivity,result)
-    .then(response => result.rows[0].name("create_expense",{currentActivity:response}))
+  const idActivity='704615f3-f79b-4f90-8183-2a777ee09c57';
+  queries.getCurrentActivityName(idActivity,result)
+    .then(response => result.render("create_expense",
+    {
+      currentActivity:response,
+      name:request.user.name,
+      id:request.user.id
+    }))
     .catch(error => console.warn(error))
 });
 
@@ -225,7 +227,7 @@ app.post(
   "/create_expense",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-    const idActivity = '0e1a513c-891b-4d02-9082-f723e41177f1';
+    const idActivity = '704615f3-f79b-4f90-8183-2a777ee09c57';
     return queries.insertIntoExpenses(request.body.titre, request.body.description, request.body.amount, uuidv4(), idActivity,request.body.hidden_value,request.user.id)
     .then(
       final => {
@@ -235,12 +237,6 @@ app.post(
     .catch(error => console.warn(error))
   }
 );
-
-app.get(
-  "/save_expense",
-  function(request, result) {
-    result.render("save_expense");
-});
 
 app.get("/activity_dashboard",
   require("connect-ensure-login").ensureLoggedIn("/"),
