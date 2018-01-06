@@ -42,8 +42,14 @@ passport.serializeUser(function(user, callback) {
   return callback(null, user.id);
 });
 
-passport.deserializeUser(function(user, callback) {
-  return callback(null, user)
+// passport.deserializeUser(function(user, callback) {
+//   return callback(null, user)
+// });
+
+passport.deserializeUser(function(id, callback) {
+  return users.findUserById(id).then(user=>{
+    callback(null, user)
+  });
 });
 
 passport.use(
@@ -89,21 +95,10 @@ app.get(
   "/auth/facebook/return",
   passport.authenticate("facebook", { failureRedirect: "/login" }),
   function(request, result) {
-    console.log("je suis dans passport.authenticate /login/facebook/return")
-    result.redirect("/profile");
+    console.log("je suis dans passport.authenticate /login/facebook/return " + request.user.id);
+    result.redirect("/dashboard");
   }
 );
-
-app.get(
-  "/profile",
-  require("connect-ensure-login").ensureLoggedIn(),
-  function(request, result) {
-    result.render("profile", {
-      id: request.user.id,
-      name: request.user.name,
-      email: request.user.email
-    });
-});
 
 app.get("/", function(request, result) {
   result.render("login");

@@ -24,6 +24,7 @@
     "express-session": "^1.15.6",
     "facebook-sdk": "^0.3.2",
     "fb": "^2.0.0",
+    "forever": "^0.15.3",
     "jest": "^22.0.4",
     "nunjucks": "^3.0.1",
     "oauth": "^0.9.15",
