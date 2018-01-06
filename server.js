@@ -259,12 +259,16 @@ app.get(
   const currentActivity = queries.getActivity(`${request.params.id}`);
   const currentExpense = queries.getExpense(`${request.params.id}`);
   const currentParticipant = queries.getParticipant(`${request.params.id}`);
-Promise.all([currentActivity, currentExpense, currentParticipant])
+  const currentBuyer = queries.getBuyer(`${request.params.id}`);
+  const currentExpenseParticipant = queries.getExpenseParticipant(`${request.params.id}`);
+Promise.all([currentActivity, currentExpense, currentParticipant, currentBuyer, currentExpenseParticipant])
   .then(results => {
     result.render("activity_dashboard",{
       activity:results[0].rows,
       expense:results[1].rows,
       participants:results[2].rows,
+      buyer:results[3].rows,
+      expenseParticipant:results[4].rows,
       name:request.user.name,
       id:request.user.id
     })

@@ -73,8 +73,20 @@ Liste des dépenses</font>
         <tr>
           <th scope="row">{{expenseInfo.name}}</th>
           <td>{{expenseInfo.creation_time.toLocaleString("fr", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}}</td>
-          <td>{{expenseInfo.creation_user_id}}</td>
-          <td>{{expenseInfo.amount}}</td>
+          <td>
+            {% for buyerInfo in buyer %}
+              <div>
+                {{buyerInfo.email}}</a>
+              </div>
+              {% endfor %}
+          </td>
+          <td>
+            {% for expenseParticipantInfo in expenseParticipant %}
+              <div>
+                {{expenseParticipantInfo.email}}</a>
+              </div>
+              {% endfor %}
+          </td>
           <td>{{expenseInfo.amount}}</td>
           <td><button type="button" class="btn btn-link" href={{expenseInfo.description}}>Voir</button></td>
         </tr>
