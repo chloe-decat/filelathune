@@ -192,7 +192,7 @@ app.post(
   function(request, result) {
     return queries.exportActivity(uuidv4(),request.body.startdate, request.body.description, request.body.titre, request.body.hidden_value, request.user.id)
     .then(final => {
-        result.redirect("/activity_dashboard");
+        result.redirect("/create_activity");
       })
     .catch(error => console.warn(error))
   }

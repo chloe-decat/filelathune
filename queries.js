@@ -128,33 +128,9 @@ function getCurrentActivityName(idActivity){
   })
 }
 
-function getBuyer(idActivity){
-  const client = new PG.Client();
-  client.connect();
-  return client.query(
-    `SELECT email FROM users WHERE id IN (SELECT creation_user_id FROM expenses WHERE activity_id=$1);`,
-    [`${idActivity}`]
-  )
-  .then(result => {
-    client.end();
-    return result;
-  })
-}
-
-function getExpenseParticipant(idActivity){
-  const client = new PG.Client();
-  client.connect();
-  return client.query(
-    `SELECT email FROM users WHERE id IN (SELECT user_id FROM users_expenses WHERE expense_id IN (SELECT id FROM expenses WHERE activity_id=$1));`,
-    [`${idActivity}`]
-  )
-  .then(result => {
-    client.end();
-    return result;
-  })
-}
-
-function insertIntoExpenses(name,description,amount,uuid, idActivity){
+function insertIntoExpenses(name, description, amount, uuid, idActivity, listUser, user){
+  const userTab=listUser.substring(1).split(",");
+  let userExpense="";
   const client = new PG.Client();
   client.connect();
   return client.query(
