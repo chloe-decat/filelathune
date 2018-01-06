@@ -259,8 +259,3 @@ Promise.all([currentActivity, currentExpense, currentParticipant, currentBuyer, 
     })
   })
 });
-app.get(
-  "/activity_dashboard",
-  function(request, result) {
-    result.render("activity_dashboard");
-});
