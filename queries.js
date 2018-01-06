@@ -184,6 +184,52 @@ function exportActivity(uuid, startdate, description, titre, listUser, user) {
     })
   })
 }
+
+function findOrCreateUser(name,email){
+  console.log("je suis dans find0rcreate")
+ const client = new PG.Client();
+ client.connect();
+ return client.query(
+ "INSERT INTO users (id, name, email) VALUES (uuid_generate_v4(), $1::text, $2::text)",
+ [name, email])
+   .then(result => {
+     return  console.log("insert OK");;
+   })
+   .catch(error => console.log(error))
+ ;
+ client.end();
+}
+
+
+function findOrCreateUser(profile, callback){
+  const facebook_id = profile.id;
+  const facebook_name = profile.displayName;
+  const client = new PG.Client();
+  client.connect();
+  console.log("profile : " + profile.id);
+  return client.query(
+    "SELECT * FROM users WHERE facebook_id=$1",
+    // "SELECT EXISTS(SELECT facebook_id FROM users WHERE facebook_id=$1)",
+    [facebook_id])
+  .then(result => {
+    if (result.rows[0] !== undefined) {
+      callback(null, result.rows[0])
+    } else {
+      return client.query(
+        "INSERT INTO users (id, facebook_id, name) VALUES (uuid_generate_v4(), $1::text, $2::text) returning id, facebook_id,name,password",
+        [facebook_id, facebook_name])
+      .then(response => {
+        client.end();
+        callback(null, response);
+      })
+      .catch(error => {
+        callback(error);
+      })
+    }
+  })
+  .catch(error => console.log(error))
+}
+
 module.exports = {
 getExpenseParticipant:getExpenseParticipant,
 getBuyer:getBuyer,
@@ -195,5 +241,6 @@ userExist:userExist,
 insertUser:insertUser,
 getCurrentActivityName:getCurrentActivityName,
 insertIntoExpenses:insertIntoExpenses,
-exportActivity:exportActivity
+exportActivity:exportActivity,
+findOrCreateUser: findOrCreateUser
 };

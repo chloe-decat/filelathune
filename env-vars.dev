@@ -1,3 +1,0 @@
-export CLIENT_ID="140184933335614",
-export CLIENT_SECRET="5ac096188212655c01e9766928712b21",
-export REDIRECT_URI="http://localhost:3000/login/facebook/return"

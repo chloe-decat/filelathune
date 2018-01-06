@@ -3,7 +3,6 @@ const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
 const nunjucks = require("nunjucks");
 const sha256 = require("sha256");
-
 const queries = require("./queries.js");
 const users = require("./user.js");
 const uuidv4 = require('uuid/v4');
@@ -43,8 +42,12 @@ passport.serializeUser(function(user, callback) {
   return callback(null, user.id);
 });
 
+// passport.deserializeUser(function(user, callback) {
+//   return callback(null, user)
+// });
+
 passport.deserializeUser(function(id, callback) {
-  return users.findUserById(id).then(user => {
+  return users.findUserById(id).then(user=>{
     callback(null, user)
   });
 });
@@ -61,6 +64,7 @@ passport.use(
       });
   }));
 
+passport.use(
   new FacebookStrategy(
     {
       clientID: process.env.CLIENT_ID,
@@ -68,22 +72,10 @@ passport.use(
       callbackURL: process.env.REDIRECT_URI
     },
     function(accessToken, refreshToken, profile, callback) {
-      FB.api(
-          "me",
-          { fields: "id,name,email", access_token: accessToken },
-          function(user) {
-            findOrCreateUser(user)
-              .then(user => {
-                callback(null, user);
-              })
-              .catch(error => {
-                callback(error);
-              })
-          }
-        );
+      return queries.findOrCreateUser(profile, callback)
     }
-  );
-
+  )
+);
 
 // Attention checker les routes qui font doublon
 app.get("/", function(request, result) {
@@ -93,31 +85,20 @@ app.get("/", function(request, result) {
 });
 
 app.get(
-  "/login",
+  "/auth/facebook",
   passport.authenticate("facebook", {
     authType: "rerequest" // rerequest is here to ask again if login was denied once
   })
 );
 
 app.get(
-  "/login/facebook/return",
+  "/auth/facebook/return",
   passport.authenticate("facebook", { failureRedirect: "/login" }),
   function(request, result) {
-    result.redirect("/");
+    console.log("je suis dans passport.authenticate /login/facebook/return " + request.user.id);
+    result.redirect("/dashboard");
   }
 );
-
-app.get(
-  "/profile",
-  require("connect-ensure-login").ensureLoggedIn(),
-  function(request, result) {
-    result.render("profile", {
-      id: request.user.id,
-      name: request.user.name,
-      email: request.user.email
-    });
-});
-// Attention checker les routes qui font doublon - jusque la.
 
 app.get("/", function(request, result) {
   result.render("login");
@@ -212,7 +193,7 @@ app.post(
 app.get("/create_expense",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-  const idActivity='704615f3-f79b-4f90-8183-2a777ee09c57';
+  const idActivity='0e1a513c-891b-4d02-9082-f723e41177f1';
   queries.getCurrentActivityName(idActivity,result)
     .then(response => result.render("create_expense",
     {
@@ -227,7 +208,7 @@ app.post(
   "/create_expense",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-    const idActivity = '704615f3-f79b-4f90-8183-2a777ee09c57';
+    const idActivity = '0e1a513c-891b-4d02-9082-f723e41177f1';
     return queries.insertIntoExpenses(request.body.titre, request.body.description, request.body.amount, uuidv4(), idActivity,request.body.hidden_value,request.user.id)
     .then(
       final => {
