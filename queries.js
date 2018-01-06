@@ -1,7 +1,6 @@
 const PG = require("pg");
 const sha256 = require("sha256");
 
-
 function getActivity(idActivity){
   const client = new PG.Client();
   client.connect();
@@ -188,22 +187,6 @@ function exportActivity(uuid, startdate, description, titre, listUser, user) {
   })
 }
 
-function findOrCreateUser(name,email){
-  console.log("je suis dans find0rcreate")
- const client = new PG.Client();
- client.connect();
- return client.query(
- "INSERT INTO users (id, name, email) VALUES (uuid_generate_v4(), $1::text, $2::text)",
- [name, email])
-   .then(result => {
-     return  console.log("insert OK");;
-   })
-   .catch(error => console.log(error))
- ;
- client.end();
-}
-
-
 function findOrCreateUser(profile, callback){
   const facebook_id = profile.id;
   const facebook_name = profile.displayName;
@@ -246,4 +229,4 @@ getCurrentActivityName:getCurrentActivityName,
 insertIntoExpenses:insertIntoExpenses,
 exportActivity:exportActivity,
 findOrCreateUser: findOrCreateUser
-};
+}
