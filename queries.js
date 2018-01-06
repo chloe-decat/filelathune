@@ -1,6 +1,104 @@
 const PG = require("pg");
 const sha256 = require("sha256");
 
+
+function getActivity(idActivity){
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    `SELECT * FROM activities WHERE id=$1`,
+    [`${idActivity}`]
+  )
+  .then(result => {
+    client.end();
+    return result;
+  })
+}
+
+function getExpense(idActivity){
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    `SELECT * FROM expenses WHERE activity_id=$1`,
+    [`${idActivity}`]
+  )
+  .then(result => {
+    client.end();
+    return result;
+  })
+}
+
+function getParticipant(idActivity){
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    `SELECT * FROM users WHERE id IN (SELECT user_id FROM users_activities WHERE activity_id=$1)`,
+    [`${idActivity}`]
+  )
+  .then(result => {
+    client.end();
+    return result;
+  })
+}
+
+function getBuyer(idActivity){
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    `SELECT email FROM users WHERE id IN (SELECT creation_user_id FROM expenses WHERE activity_id=$1);`,
+    [`${idActivity}`]
+  )
+  .then(result => {
+    client.end();
+    return result;
+  })
+}
+
+function getExpenseParticipant(idActivity){
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    `SELECT email FROM users WHERE id IN (SELECT user_id FROM users_expenses WHERE expense_id IN (SELECT id FROM expenses WHERE activity_id=$1));`,
+    [`${idActivity}`]
+  )
+  .then(result => {
+    client.end();
+    return result;
+  })
+}
+
+function getActivitiesFromUSer(user_id){
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    "SELECT * FROM activities WHERE id IN (SELECT activity_id FROM users_activities WHERE user_id = $1) ORDER BY start_date DESC",
+    [user_id]
+  )
+  .then(result => {
+    client.end();
+    return result;
+  })
+  .catch(error => console.warn(error))
+  ;
+}
+
+function userExist(userEmail){
+  const client = new PG.Client();
+  client.connect();
+  return client.query(
+    `SELECT * FROM users WHERE email=$1`,
+    [`${userEmail}`]
+  )
+  .then(result => {
+    if (result.rows[0]=== undefined) {
+        client.end();
+       return result=true;
+    } else {
+      client.end();
+      return result.rows[0].id;
+    }
+  })
+}
 function insertUser(name, email, password){
   const client = new PG.Client();
   client.connect();
@@ -58,7 +156,9 @@ function insertIntoExpenses(name, description, amount, uuid, idActivity, listUse
     })
 }
 
-function insertActivity(uuid, startdate, description, titre, user_id) {
+function exportActivity(uuid, startdate, description, titre, listUser, user) {
+  const userTab=listUser.substring(1).split(",");
+  let userActivity="";
   const client = new PG.Client();
   client.connect();
   return client.query(
@@ -82,49 +182,18 @@ function insertActivity(uuid, startdate, description, titre, user_id) {
       })
       .catch(error => console.log(error));
     })
-  });
-}
-
-function getActivitiesFromUSer(user_id){
-  const client = new PG.Client();
-  client.connect();
-  return client.query(
-    "SELECT * FROM activities WHERE id IN (SELECT activity_id FROM users_activities WHERE user_id = $1) ORDER BY start_date DESC",
-    [user_id]
-  )
-  .then(result => {
-    client.end();
-    return result;
-  })
-  .catch(error => console.warn(error))
-  ;
-}
-
-function userExist(userEmail){
-  const client = new PG.Client();
-  client.connect();
-  return client.query(
-    `SELECT * FROM users WHERE email=$1`,
-    [`${userEmail}`]
-  )
-  .then(result => {
-    if (result.rows[0]=== undefined) {
-        client.end();
-       return result=true;
-    } else {
-      client.end();
-      return result.rows[0].id;
-    }
   })
 }
-
-
-
 module.exports = {
-getCurrentActivityName:getCurrentActivityName,
-insertUser: insertUser,
-insertIntoExpenses:insertIntoExpenses,
-insertActivity:insertActivity,
+getExpenseParticipant:getExpenseParticipant,
+getBuyer:getBuyer,
+getParticipant:getParticipant,
+getActivity:getActivity,
+getExpense:getExpense,
 getActivitiesFromUSer:getActivitiesFromUSer,
-userExist:userExist
+userExist:userExist,
+insertUser:insertUser,
+getCurrentActivityName:getCurrentActivityName,
+insertIntoExpenses:insertIntoExpenses,
+exportActivity:exportActivity
 };
