@@ -108,7 +108,10 @@ function insertUser(name, email, password){
   )
   .then(result => {
     client.end();
-    return result.rows[0].id;
+    return result.rows[0];
+  })
+  .catch(error => {
+    console.warn(error);
   })
 }
 

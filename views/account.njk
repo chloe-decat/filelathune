@@ -1,4 +1,3 @@
-{% extends "navbar.njk"%}
 {% extends "layout.njk"%}
 
 {% block main %}
@@ -10,9 +9,16 @@
   .btn{
     margin:10px;
   }
+  .row{
+    margin:50px;
+  }
 </style>
+<font color="white">
+  <h1 class="text-center">Bienvenue sur FileLaThune</h1>
+  <p class="text-center">Les bons comptes font les bons amis</p>
+</font>
 <div class="container-fluid">
-  <div class="row card-deck col-xs-12 col-sm-6 col-md-4 card bg-light mb-3">
+  <div class="row card-deck col-xs-12 col-sm-6 col-md-4 card bg-light mb-3 justify-content-md-center mx-auto">
     <h2 class="display-5">Créer un compte</h2>
     <form action="/account" method="POST">
       <table>

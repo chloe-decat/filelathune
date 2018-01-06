@@ -163,8 +163,16 @@ app.get("/account", function(request, result) {
 app.post(
   "/account",
   function(request, result) {
-    queries.insertUser(request.body.name, request.body.username, sha256(request.body.password));
-    result.redirect("/");
+    queries.insertUser(request.body.name, request.body.username, sha256(request.body.password))
+      .then(user => {
+        request.logIn(user, function(error) {
+          if (error) {
+            console.log(error);
+            return result.redirect("/account");
+          }
+          return result.redirect("/dashboard");
+        });
+      });
   }
 );
 
