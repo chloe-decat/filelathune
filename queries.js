@@ -185,6 +185,7 @@ function exportActivity(uuid, startdate, description, titre, listUser, user) {
       .catch(error => console.log(error));
     })
   })
+}
 
 function findOrCreateUser(profile, callback){
   const facebook_id = profile.id;
@@ -228,4 +229,4 @@ getCurrentActivityName:getCurrentActivityName,
 insertIntoExpenses:insertIntoExpenses,
 exportActivity:exportActivity,
 findOrCreateUser: findOrCreateUser
-};
+}
