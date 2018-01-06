@@ -193,7 +193,7 @@ app.post(
 app.get("/create_expense",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-  const idActivity='704615f3-f79b-4f90-8183-2a777ee09c57';
+  const idActivity='0e1a513c-891b-4d02-9082-f723e41177f1';
   queries.getCurrentActivityName(idActivity,result)
     .then(response => result.render("create_expense",
     {
@@ -208,7 +208,7 @@ app.post(
   "/create_expense",
   require("connect-ensure-login").ensureLoggedIn("/"),
   function(request, result) {
-    const idActivity = '704615f3-f79b-4f90-8183-2a777ee09c57';
+    const idActivity = '0e1a513c-891b-4d02-9082-f723e41177f1';
     return queries.insertIntoExpenses(request.body.titre, request.body.description, request.body.amount, uuidv4(), idActivity,request.body.hidden_value,request.user.id)
     .then(
       final => {
