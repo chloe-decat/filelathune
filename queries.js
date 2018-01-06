@@ -1,7 +1,6 @@
 const PG = require("pg");
 const sha256 = require("sha256");
 
-
 function getActivity(idActivity){
   const client = new PG.Client();
   client.connect();
@@ -115,72 +114,23 @@ function insertUser(name, email, password){
   })
 }
 
-function getActivity(idActivity){
+
+function getCurrentActivityName(idActivity){
   const client = new PG.Client();
   client.connect();
   return client.query(
-    `SELECT * FROM activities WHERE id=$1`,
+    `SELECT name FROM activities WHERE id=$1`,
     [`${idActivity}`]
   )
   .then(result => {
     client.end();
-    return result;
+    return result.rows[0].name;
   })
 }
 
-function getExpense(idActivity){
-  const client = new PG.Client();
-  client.connect();
-  return client.query(
-    `SELECT * FROM expenses WHERE activity_id=$1`,
-    [`${idActivity}`]
-  )
-  .then(result => {
-    client.end();
-    return result;
-  })
-}
-
-function getParticipant(idActivity){
-  const client = new PG.Client();
-  client.connect();
-  return client.query(
-    `SELECT * FROM users WHERE id IN (SELECT user_id FROM users_activities WHERE activity_id=$1)`,
-    [`${idActivity}`]
-  )
-  .then(result => {
-    client.end();
-    return result;
-  })
-}
-
-function getBuyer(idActivity){
-  const client = new PG.Client();
-  client.connect();
-  return client.query(
-    `SELECT email FROM users WHERE id IN (SELECT creation_user_id FROM expenses WHERE activity_id=$1);`,
-    [`${idActivity}`]
-  )
-  .then(result => {
-    client.end();
-    return result;
-  })
-}
-
-function getExpenseParticipant(idActivity){
-  const client = new PG.Client();
-  client.connect();
-  return client.query(
-    `SELECT email FROM users WHERE id IN (SELECT user_id FROM users_expenses WHERE expense_id IN (SELECT id FROM expenses WHERE activity_id=$1));`,
-    [`${idActivity}`]
-  )
-  .then(result => {
-    client.end();
-    return result;
-  })
-}
-
-function insertIntoExpenses(name,description,amount,uuid, idActivity){
+function insertIntoExpenses(name, description, amount, uuid, idActivity, listUser, user){
+  const userTab=listUser.substring(1).split(",");
+  let userExpense="";
   const client = new PG.Client();
   client.connect();
   return client.query(
@@ -235,23 +185,6 @@ function exportActivity(uuid, startdate, description, titre, listUser, user) {
       .catch(error => console.log(error));
     })
   })
-}
-
-function findOrCreateUser(name,email){
-  console.log("je suis dans find0rcreate")
- const client = new PG.Client();
- client.connect();
- return client.query(
- "INSERT INTO users (id, name, email) VALUES (uuid_generate_v4(), $1::text, $2::text)",
- [name, email])
-   .then(result => {
-     return  console.log("insert OK");;
-   })
-   .catch(error => console.log(error))
- ;
- client.end();
-}
-
 
 function findOrCreateUser(profile, callback){
   const facebook_id = profile.id;
