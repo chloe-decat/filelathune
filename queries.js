@@ -176,7 +176,6 @@ getParticipant:getParticipant,
 getActivity:getActivity,
 getExpense:getExpense,
 insertUser: insertUser,
-insertIntoUsersExpenses:insertIntoUsersExpenses,
 insertActivity:insertActivity,
 getActivitiesFromUSer:getActivitiesFromUSer,
 userExist:userExist
